@@ -275,82 +275,411 @@
 
   a:focus-visible, button:focus-visible{ outline:3px solid #fff; outline-offset:2px; }
 </style>
+<style>
+  :root{
+    --bg: #000;
+    --panel: #0c0c0c;
+    --ink: #fff;
+    --ink-soft: #a8a8a4;
+    --line: rgba(255,255,255,0.85);
+    --line-dim: rgba(255,255,255,0.18);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Work Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:640px;margin:0 auto;padding:22px 16px 70px;}
+
+  /* ---------- header ---------- */ck
+  header{ text-align:center; margin-bottom:26px; position:relative; }
+  .mascot-badge{
+    width:74px;height:74px;
+    border-radius:50%;
+    margin:0 auto 14px;
+    display:block;
+    box-shadow:0 0 0 3px #fff, 0 8px 20px rgba(0,0,0,0.6);
+  }
+  .kicker{
+    font-family:'Permanent Marker', cursive;
+    font-size:19px; font-weight:400;
+    color:#fff;
+    opacity:0.8;
+    margin:0 0 4px;
+  }
+  h1{
+    font-family:'Archivo Black', sans-serif;
+    font-weight:400;
+    font-size:32px;
+    margin:0 0 10px;
+    letter-spacing:0.5px;
+  }
+  .sub{ color:var(--ink-soft); font-size:15px; margin:0; }
+
+  .share-btn{
+    margin-top:16px;
+    background:#000;
+    border:2px solid #fff;
+    color:#fff;
+    font-family:'Work Sans', sans-serif;
+    font-weight:600;
+    font-size:13.5px;
+    padding:8px 18px;
+    border-radius:20px;
+    cursor:pointer;
+  }
+  .share-btn:active{ transform:scale(0.97); }
+
+  /* ---------- folder grid (home view) ---------- */
+  .folder-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-top:26px;
+  }
+  .folder{
+    background:var(--panel);
+    border:2px solid #fff;
+    border-radius:4px;
+    padding:18px 14px;
+    text-align:left;
+    cursor:pointer;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    transition:transform .15s ease;
+    color:#fff;
+  }
+  .folder:active{ transform:scale(0.97); }
+  .folder-emoji{ font-size:26px; filter:grayscale(1) contrast(1.4); }
+  .folder-name{
+    font-family:'Archivo Black', sans-serif;
+    font-weight:400;
+    font-size:15px;
+    line-height:1.25;
+  }
+  .folder-count{ font-size:12.5px; color:var(--ink-soft); }
+  .folder.soon{ border-color:var(--line-dim); opacity:0.5; }
+  .folder.soon .folder-count{ font-family:'Permanent Marker', cursive; font-size:14px; }
+
+  /* ---------- panel content area ---------- */
+  .panel{ display:none; }
+  .panel.active{ display:block; }
+
+  .back-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:none;
+    border:none;
+    color:#fff;
+    font-weight:600;
+    font-size:14.5px;
+    cursor:pointer;
+    padding:6px 0 16px;
+    opacity:0.85;
+  }
+
+  .guide-list-item{
+    background:var(--panel);
+    border:2px solid #fff;
+    border-radius:4px;
+    padding:14px 16px;
+    margin-bottom:10px;
+    cursor:pointer;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    color:#fff;
+  }
+  .guide-list-item .name{ font-weight:600; font-size:15px; }
+  .guide-list-item .arrow{ color:#fff; font-size:18px; }
+
+  /* ---------- guide detail ---------- */
+  .guide-title{
+    font-family:'Archivo Black', sans-serif;
+    font-weight:400;
+    font-size:22px;
+    margin:0 0 6px;
+    letter-spacing:0.3px;
+  }
+  .guide-sub{ color:var(--ink-soft); font-size:14.5px; margin:0 0 20px; }
+
+  .block{
+    background:var(--panel);
+    border:2px solid #fff;
+    border-radius:4px;
+    padding:18px 16px;
+    margin-bottom:16px;
+    position:relative;
+    overflow:hidden;
+  }
+  .halftone-corner{
+    position:absolute;
+    top:-16px; left:-16px;
+    width:80px;height:80px;
+    background-image: radial-gradient(circle, #fff 2px, transparent 2.5px);
+    background-size:12px 12px;
+    opacity:0.35;
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+  }
+  .block-label{
+    font-family:'Archivo Black', sans-serif;
+    font-weight:400;
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:#fff;
+    margin:0 0 14px;
+    display:flex;
+    align-items:center;
+    gap:7px;
+  }
+  .steps{ margin:0; padding:0; list-style:none; counter-reset:step; }
+  .steps li{
+    counter-increment:step;
+    display:flex;
+    gap:12px;
+    padding-bottom:14px;
+    margin-bottom:14px;
+    border-bottom:1px dashed var(--line-dim);
+    font-size:14.5px;
+    line-height:1.5;
+    color:#fff;
+  }
+  .steps li:last-child{ border-bottom:none; margin-bottom:0; padding-bottom:0; }
+  .steps li::before{
+    content:counter(step);
+    flex-shrink:0;
+    width:26px;height:26px;
+    background:#fff;
+    color:#000;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;
+    font-size:13px;
+    font-family:'Archivo Black',sans-serif;
+  }
+  .steps li b{ display:block; margin-bottom:2px; }
+  .steps li .detail{ color:var(--ink-soft); }
+
+  /* speech-bubble style callouts, replacing the old warm callout boxes */
+  .bubble-row{ display:flex; flex-direction:column; gap:10px; }
+  .bubble{
+    background:#fff;
+    color:#000;
+    border-radius:14px;
+    padding:12px 15px;
+    font-size:14px;
+    line-height:1.4;
+    max-width:92%;
+    position:relative;
+  }
+  .bubble.me{ align-self:flex-end; background:#fff; }
+  .bubble.ia{ align-self:flex-start; background:#e6e6e6; }
+  .bubble b{ color:#000; }
+  .bubble-label{
+    font-family:'Permanent Marker', cursive;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    opacity:0.55;
+    margin-bottom:3px;
+    display:block;
+  }
+
+  .callout{
+    background:#151515;
+    border:1px dashed #fff;
+    border-radius:6px;
+    padding:12px 14px;
+    font-size:14px;
+    color:#fff;
+    margin-top:4px;
+  }
+  .callout b{ color:#fff; }
+
+  .exact-tap{
+    display:inline-block;
+    background:#1c1c1c;
+    border:1px solid #fff;
+    border-radius:5px;
+    padding:1px 7px;
+    font-size:13px;
+    font-weight:600;
+  }
+
+  /* ---------- CTA ---------- */
+  .cta-zone{ text-align:center; margin-top:32px; }
+  .cta-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    background:#fff;
+    color:#000;
+    text-decoration:none;
+    font-family:'Archivo Black', sans-serif;
+    font-weight:400;
+    font-size:16px;
+    padding:14px 28px;
+    border-radius:50px;
+  }
+  .cta-sub{ display:block; margin-top:12px; font-size:13px; color:var(--ink-soft); }
+
+  footer{ text-align:center; margin-top:44px; font-family:'Permanent Marker', cursive; font-size:16px; color:#6b6b68; }
+
+  a:focus-visible, button:focus-visible{ outline:3px solid #fff; outline-offset:2px; }
+
+  .monito-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: -20px;
+    position: relative;
+    z-index: 1;
+  }
+  .monito-footer-img {
+    width: 140px;
+    height: auto;
+    transition: transform .15s;
+  }
+  .monito-footer-img.shake {
+    animation: monitoShake .4s ease;
+  }
+  @keyframes monitoShake {
+    0%   { transform: rotate(0deg) translateY(0); }
+    20%  { transform: rotate(-8deg) translateY(-6px); }
+    40%  { transform: rotate(7deg) translateY(-10px); }
+    60%  { transform: rotate(-5deg) translateY(-4px); }
+    80%  { transform: rotate(3deg) translateY(0); }
+    100% { transform: rotate(0deg) translateY(0); }
+  }
+
+  .footer-social {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    padding: 32px 0;
+    position: relative;
+    background: #000;
+  }
+  .footer-social a, .footer-social button {
+    background: #000;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #fff;
+    transition: transform .15s;
+  }
+  .footer-social a:active, .footer-social button:active {
+    transform: scale(0.9);
+  }
+
+  .social-tooltip {
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%) scale(0.9);
+    background: #000;
+    color: #fff;
+    border: 3px solid #fff;
+    padding: 12px 20px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    max-width: 260px;
+    text-align: center;
+    display: none;
+    z-index: 999;
+    box-shadow: 4px 4px 0 #fff;
+    opacity: 0;
+    transition: opacity .15s, transform .15s;
+  }
+  .social-tooltip.show {
+    display: block;
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+</style>
 </head>
 <body>
-<div class="wrap">
 
-  <header>
-    <img class="mascot-badge" src="images/mascot-badge.png" alt="La Otra Carrera">
-    <p class="kicker">no somos la NASA</p>
-    <h1>LA OTRA CARRERA</h1>
-    <p class="sub">El archivador de guías del colectivo. Busca tu tema, sigue los pasos, listo.</p>
-    <button id="share-btn" class="share-btn">↗ Compartir</button>
-  </header>
-
-  <!-- ============ HOME: folders ============ -->
   <div id="view-home" class="panel active">
+    <h1 class="home-title">Archivador de Guías</h1>
+    <p class="home-sub">Elegí una carpeta y seguí los pasos. Sin vueltas.</p>
     <div class="folder-grid">
-      <button class="folder" data-target="folder-colegio">
-        <div class="folder-emoji">🎒</div>
-        <div class="folder-name">Colegio y niños</div>
-        <div class="folder-count">1 guía</div>
-      </button>
-      <button class="folder" data-target="folder-cuentas">
-        <div class="folder-emoji">🧾</div>
-        <div class="folder-name">Cuentas y boletas</div>
-        <div class="folder-count">1 guía</div>
-      </button>
-      <button class="folder" data-target="folder-agenda">
-        <div class="folder-emoji">📅</div>
-        <div class="folder-name">Agenda y reuniones</div>
-        <div class="folder-count">1 guía</div>
-      </button>
-      <button class="folder" data-target="folder-mensajes">
-        <div class="folder-emoji">✉️</div>
-        <div class="folder-name">Mensajes difíciles</div>
-        <div class="folder-count">1 guía</div>
-      </button>
+      <button class="folder" data-target="folder-colegio"><div class="folder-emoji">🎒</div><div class="folder-name">Colegio y niños</div><div class="folder-count">1 guía</div></button>
+      <button class="folder" data-target="folder-cuentas"><div class="folder-emoji">🧾</div><div class="folder-name">Cuentas y boletas</div><div class="folder-count">1 guía</div></button>
+      <button class="folder" data-target="folder-agenda"><div class="folder-emoji">📅</div><div class="folder-name">Agenda y reuniones</div><div class="folder-count">3 guías</div></button>
+      <button class="folder" data-target="folder-mensajes"><div class="folder-emoji">✉️</div><div class="folder-name">Mensajes y correos</div><div class="folder-count">2 guías</div></button>
+      <button class="folder" data-target="folder-ia"><div class="folder-emoji">🤖</div><div class="folder-name">IA para empezar</div><div class="folder-count">6 guías</div></button>
+      <button class="folder" data-target="folder-negocio"><div class="folder-emoji">💼</div><div class="folder-name">Automatizar y crecer</div><div class="folder-count">10 guías</div></button>
     </div>
   </div>
 
-  <!-- ============ FOLDER: colegio (list) ============ -->
+  
   <div id="folder-colegio" class="panel">
     <button class="back-btn" data-back="view-home">← Todas las carpetas</button>
-    <div class="guide-list-item" data-target="guide-cartulina">
-      <span class="name">Entender un comunicado del colegio en 1 minuto</span>
-      <span class="arrow">›</span>
-    </div>
+      <div class="guide-list-item" data-target="guide-cartulina"><span class="name">Entender un comunicado del colegio en 1 minuto</span><span class="arrow">›</span></div>
   </div>
 
-  <!-- ============ FOLDER: cuentas (list) ============ -->
   <div id="folder-cuentas" class="panel">
     <button class="back-btn" data-back="view-home">← Todas las carpetas</button>
-    <div class="guide-list-item" data-target="guide-boleta">
-      <span class="name">Cuánto voy a pagar y por qué subió</span>
-      <span class="arrow">›</span>
-    </div>
+      <div class="guide-list-item" data-target="guide-boleta"><span class="name">Entender una boleta o cuenta en 1 minuto</span><span class="arrow">›</span></div>
   </div>
 
-  <!-- ============ FOLDER: agenda (list) ============ -->
   <div id="folder-agenda" class="panel">
     <button class="back-btn" data-back="view-home">← Todas las carpetas</button>
-    <div class="guide-list-item" data-target="guide-reunion">
-      <span class="name">Ordenar una junta o reunión sin perderte en el chat</span>
-      <span class="arrow">›</span>
-    </div>
+      <div class="guide-list-item" data-target="guide-reunion"><span class="name">Organizar una reunión en 1 minuto</span><span class="arrow">›</span></div>
+      <div class="guide-list-item" data-target="guide-resumen-reunion"><span class="name">Resumir una reunión en 1 minuto</span><span class="arrow">›</span></div>
+      <div class="guide-list-item" data-target="guide-documentacion"><span class="name">Convertir manuales aburridos en respuestas rápidas</span><span class="arrow">›</span></div>
   </div>
 
-  <!-- ============ FOLDER: mensajes (list) ============ -->
   <div id="folder-mensajes" class="panel">
     <button class="back-btn" data-back="view-home">← Todas las carpetas</button>
-    <div class="guide-list-item" data-target="guide-mensaje-dificil">
-      <span class="name">Escribir un mensaje incómodo sin quedar mal</span>
-      <span class="arrow">›</span>
-    </div>
+      <div class="guide-list-item" data-target="guide-mensaje-dificil"><span class="name">Escribir un mensaje difícil en 1 minuto</span><span class="arrow">›</span></div>
+      <div class="guide-list-item" data-target="guide-correos-automaticos"><span class="name">Escribir correos automáticos en 1 minuto</span><span class="arrow">›</span></div>
   </div>
 
-  <!-- ============ GUIDE: cartulina (detail) ============ -->
+  <div id="folder-ia" class="panel">
+    <button class="back-btn" data-back="view-home">← Todas las carpetas</button>
+      <div class="guide-list-item" data-target="guide-chatbot"><span class="name">Usar un chatbot como asistente personal</span><span class="arrow">›</span></div>
+      <div class="guide-list-item" data-target="guide-que-es-ia"><span class="name">Entender qué es la IA sin aburrirse</span><span class="arrow">›</span></div>
+      <div class="guide-list-item" data-target="guide-agentes"><span class="name">Usar un agente de IA para que haga cosas por usted</span><span class="arrow">›</span></div>
+      <div class="guide-list-item" data-target="guide-prompts"><span class="name">Escribir un buen prompt en 1 minuto</span><span class="arrow">›</span></div>
+      <div class="guide-list-item" data-target="guide-errores"><span class="name">Evitar los errores más comunes con IA</span><span class="arrow">›</span></div>
+      <div class="guide-list-item" data-target="guide-primeros-pasos"><span class="name">Empezar a usar IA hoy mismo en 6 pasos</span><span class="arrow">›</span></div>
+  </div>
+
+  <div id="folder-negocio" class="panel">
+    <button class="back-btn" data-back="view-home">← Todas las carpetas</button>
+      <div class="guide-list-item" data-target="guide-productividad"><span class="name">Ser más productivo delegando tareas a la IA</span><span class="arrow">›</span></div>
+      <div class="guide-list-item" data-target="guide-datos"><span class="name">Organizar datos desordenados con IA</span><span class="arrow">›</span></div>
+      <div class="guide-list-item" data-target="guide-metricas"><span class="name">Analizar métricas sin saber de Excel</span><span class="arrow">›</span></div>
+      <div class="guide-list-item" data-target="guide-flujos"><span class="name">Crear flujos automáticos sin saber de programación</span><span class="arrow">›</span></div>
+      <div class="guide-list-item" data-target="guide-integrar"><span class="name">Conectar tus apps para que trabajen juntas</span><span class="arrow">›</span></div>
+      <div class="guide-list-item" data-target="guide-ventas"><span class="name">Organizar ventas y clientes con IA</span><span class="arrow">›</span></div>
+      <div class="guide-list-item" data-target="guide-contenido"><span class="name">Crear contenido digital con IA</span><span class="arrow">›</span></div>
+      <div class="guide-list-item" data-target="guide-atencion-cliente"><span class="name">Atender clientes 24/7 con IA</span><span class="arrow">›</span></div>
+      <div class="guide-list-item" data-target="guide-escalar"><span class="name">Crecer sin contratar más personal</span><span class="arrow">›</span></div>
+      <div class="guide-list-item" data-target="guide-onboarding"><span class="name">Capacitar nuevos empleados con IA</span><span class="arrow">›</span></div>
+      <div class="guide-list-item" data-target="guide-seguridad"><span class="name">Proteger tu negocio con IA</span><span class="arrow">›</span></div>
+  </div>
+
+
+  
   <div id="guide-cartulina" class="panel">
+
     <button class="back-btn" data-back="folder-colegio">← Colegio y niños</button>
     <h2 class="guide-title">Entender un comunicado del colegio en 1 minuto</h2>
     <p class="guide-sub">Sirve para: circulares, grupos de WhatsApp del curso, agendas o cualquier papel/mensaje que te manden del colegio.</p>
@@ -394,7 +723,10 @@
   </div>
 
   <!-- ============ GUIDE: boleta (detail) ============ -->
+  </div>
+
   <div id="guide-boleta" class="panel">
+
     <button class="back-btn" data-back="folder-cuentas">← Cuentas y boletas</button>
     <h2 class="guide-title">Cuánto voy a pagar y por qué subió</h2>
     <p class="guide-sub">Sirve para: luz, agua, gas, internet, o cualquier boleta que te llegue en papel o por correo.</p>
@@ -439,7 +771,10 @@
   </div>
 
   <!-- ============ GUIDE: reunion (detail) ============ -->
+  </div>
+
   <div id="guide-reunion" class="panel">
+
     <button class="back-btn" data-back="folder-agenda">← Agenda y reuniones</button>
     <h2 class="guide-title">Ordenar una junta o reunión sin perderte en el chat</h2>
     <p class="guide-sub">Sirve para: encontrar una fecha en común en un grupo de WhatsApp, ordenar quién dijo qué, o armar la convocatoria.</p>
@@ -483,47 +818,669 @@
   </div>
 
   <!-- ============ GUIDE: mensaje difícil (detail) ============ -->
-  <div id="guide-mensaje-dificil" class="panel">
-    <button class="back-btn" data-back="folder-mensajes">← Mensajes difíciles</button>
-    <h2 class="guide-title">Escribir un mensaje incómodo sin quedar mal</h2>
-    <p class="guide-sub">Sirve para: reclamar algo, decir que no, pedir un cambio, o hablar con el profe, el jefe o un vecino.</p>
+  </div>
 
-    <div class="block">
-      <div class="halftone-corner"></div>
-      <p class="block-label">Los 3 pasos (siempre los mismos)</p>
+  <div id="guide-resumen-reunion" class="panel">
+    <button class="back-btn" data-back="folder-agenda">← Agenda y reuniones</button>
+    <h2 class="guide-title">Resumir una reunión en 1 minuto</h2>
+    <p class="guide-sub">Sirve para: llamadas de trabajo, juntas largas, reuniones donde después nadie recuerda qué se dijo.</p>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Los 3 pasos (siempre los mismos)</p>
       <ol class="steps">
-        <li><div><b>Abre el chat de tu IA.</b> El mismo que ya tengas abierto.</div></li>
-        <li><div><b>Cuéntale la situación</b> con tus palabras, como se la contarías a un amigo.</div></li>
-        <li><div><b>Háblale normal.</b> Dile "ayúdame a redactar el mensaje" y listo.</div></li>
+        <li><div><b>Termina la reunión y abre tu chat de IA.</b></div></li>
+        <li><div><b>Copie y pegue</b> la transcripción o notas desordenadas que tomó.</div></li>
+        <li><div><b>Pídele un resumen:</b> "Resúmeme esto en puntos clave con responsables y plazos."</div></li>
       </ol>
     </div>
-
-    <div class="block">
-      <div class="halftone-corner"></div>
-      <p class="block-label">Así se ve la conversación</p>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Así se ve la conversación</p>
       <div class="bubble-row">
-        <div class="bubble me"><span class="bubble-label">Tú</span>"El profe me mandó un mensaje enojado, pero yo tengo razón. Ayúdame a responderle sin sonar agresivo"</div>
-        <div class="bubble ia"><span class="bubble-label">IA</span>Aquí tienes una respuesta clara y respetuosa que explica tu punto sin sonar a pelea. <b>¿Quieres que la haga más corta o más formal?</b></div>
-        <div class="bubble me"><span class="bubble-label">Tú</span>"Más corta"</div>
-        <div class="bubble ia"><span class="bubble-label">IA</span>Listo, aquí está la versión corta para copiar y pegar.</div>
+        <div class="bubble me"><span class="bubble-label">Tú</span>[pegas las notas o transcripción]</div>
+        <div class="bubble me"><span class="bubble-label">Tú</span>"Resúmeme esto en puntos clave con responsables y plazos"</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span><b>Resumen:</b><br>• Definir fechas de lanzamiento → Juan, viernes<br>• Enviar propuesta a cliente → María, lunes<br>• Revisar presupuesto → todos, próxima reunión<br><b>¿Quieres que te lo mande por correo a los responsables?</b></div>
+        <div class="bubble me"><span class="bubble-label">Tú</span>"Sí, mándaselo a Juan y María"</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"Listo, les escribí con los puntos que les corresponden."</div>
       </div>
     </div>
-
-    <div class="callout" style="margin-top:2px;">
-      <b>Lo importante:</b> no hay que saber "la frase perfecta". Le cuentas lo que pasó con tus propias palabras y le pides ayuda, como a una persona de confianza.
-    </div>
-
-    <div class="block" style="margin-top:16px;">
-      <div class="halftone-corner"></div>
-      <p class="block-label">También le puedes pedir</p>
+    <div class="callout" style="margin-top:2px;"><b>Lo importante:</b> No necesita grabar la reunión entera. Con unas notas sueltas la IA ordena todo.</div>
+    <div class="block" style="margin-top:16px;"><div class="halftone-corner"></div><p class="block-label">También le puedes pedir</p>
       <div class="bubble-row">
-        <div class="callout">🙅 <b>¿Necesitas decir que no?</b> "Ayúdame a decir que no sin sonar mal"</div>
-        <div class="callout">😌 <b>¿Quieres bajarle el tono?</b> "Hazlo sonar más calmado"</div>
-        <div class="callout">📋 <b>¿No sabes cómo empezar?</b> "Dame 2 o 3 formas distintas de decir esto"</div>
+        <div class="callout">📝 <b>Crear un acta formal:</b> &ldquo;"Escríbeme el acta de la reunión en formato oficial"&rdquo;</div>
+        <div class="callout">📧 <b>Enviar recordatorios:</b> &ldquo;"Mándale un correo a los responsables con sus tareas y plazos"&rdquo;</div>
+        <div class="callout">📅 <b>Agendar próximas reuniones:</b> &ldquo;"Proponme fechas para la próxima reunión según los compromisos"&rdquo;</div>
       </div>
       <p style="font-size:13px;color:var(--ink-soft);margin:12px 0 0;">Es la misma conversación de siempre — solo le sigues preguntando lo que necesites.</p>
     </div>
   </div>
+
+  <div id="guide-documentacion" class="panel">
+    <button class="back-btn" data-back="folder-agenda">← Agenda y reuniones</button>
+    <h2 class="guide-title">Convertir manuales aburridos en respuestas rápidas</h2>
+    <p class="guide-sub">Sirve para: cuando el equipo pregunta siempre lo mismo y los manuales están guardados en un cajón digital.</p>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Los 3 pasos (siempre los mismos)</p>
+      <ol class="steps">
+        <li><div><b>Suba el manual o documento</b> al chat de IA.</div></li>
+        <li><div><b>Pídele que lo procese:</b> "Lea este manual y quédese con la información."</div></li>
+        <li><div><b>Después, pregúntele</b> como le preguntaría a un compañero que leyó el manual.</div></li>
+      </ol>
+    </div>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Así se ve la conversación</p>
+      <div class="bubble-row">
+        <div class="bubble me"><span class="bubble-label">Tú</span>[subes el PDF o Word del manual]</div>
+        <div class="bubble me"><span class="bubble-label">Tú</span>"Lea este manual de procedimientos y quédese con la info."</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"Perfecto, ya revisé el manual. Pregúntame lo que necesites."</div>
+        <div class="bubble me"><span class="bubble-label">Tú</span>"¿Cómo se hace una devolución?"</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"Según el manual: 1) Llame al cliente, 2) Genere el ticket, 3) Espere aprobación del supervisor. <b>¿Quiere que le recuerde los pasos la próxima vez?</b>"</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:2px;"><b>Lo importante:</b> Ya no tiene que buscar entre 50 páginas. Le pregunta como si el manual fuera un compañero de oficina que sabe todo.</div>
+    <div class="block" style="margin-top:16px;"><div class="halftone-corner"></div><p class="block-label">También le puedes pedir</p>
+      <div class="bubble-row">
+        <div class="callout">🔍 <b>Buscar información específica:</b> &ldquo;"¿Qué dice el manual sobre licencias médicas?"&rdquo;</div>
+        <div class="callout">📋 <b>Crear una guía rápida:</b> &ldquo;"Resuma este manual en una página que pueda imprimir"&rdquo;</div>
+        <div class="callout">🎓 <b>Hacer un quiz:</b> &ldquo;"Pregúnteme sobre este manual para ver si lo entendí"&rdquo;</div>
+      </div>
+      <p style="font-size:13px;color:var(--ink-soft);margin:12px 0 0;">Es la misma conversación de siempre — solo le sigues preguntando lo que necesites.</p>
+    </div>
+  </div>
+
+  <div id="guide-correos-automaticos" class="panel">
+    <button class="back-btn" data-back="folder-mensajes">← Mensajes y correos</button>
+    <h2 class="guide-title">Escribir correos automáticos en 1 minuto</h2>
+    <p class="guide-sub">Sirve para: cuando tiene que escribir el mismo correo muchas veces, o no sabe cómo empezar uno.</p>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Los 3 pasos (siempre los mismos)</p>
+      <ol class="steps">
+        <li><div><b>Abre tu chat de IA</b> y cuéntale para qué es el correo.</div></li>
+        <li><div><b>Dile el tono:</b> formal, amable, directo.</div></li>
+        <li><div><b>Copie y pegue</b> el resultado en su correo. Listo.</div></li>
+      </ol>
+    </div>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Así se ve la conversación</p>
+      <div class="bubble-row">
+        <div class="bubble me"><span class="bubble-label">Tú</span>"Necesito escribir un correo para avisar que cambiamos de dirección."</div>
+        <div class="bubble me"><span class="bubble-label">Tú</span>"Que sea formal pero amable, con la nueva dirección y la fecha."</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"Estimado proveedor:<br>Le informamos que a partir del 1 de agosto, nuestra dirección será Av. Principal 123.<br><b>¿Quieres que lo adapte para un cliente específico?</b>"</div>
+        <div class="bubble me"><span class="bubble-label">Tú</span>"Solo cambia 'estimado proveedor' por 'estimado señor González'"</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"Listo, personalizado para el señor González."</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:2px;"><b>Lo importante:</b> No tiene que empezar de cero. La IA le da un borrador y usted lo ajusta.</div>
+    <div class="block" style="margin-top:16px;"><div class="halftone-corner"></div><p class="block-label">También le puedes pedir</p>
+      <div class="bubble-row">
+        <div class="callout">✍️ <b>Adaptar el tono:</b> &ldquo;"Hazlo más informal, como para un amigo"&rdquo;</div>
+        <div class="callout">🌍 <b>Traducirlo:</b> &ldquo;"Traduce esto al inglés para un cliente americano"&rdquo;</div>
+        <div class="callout">📎 <b>Agregar detalles:</b> &ldquo;"Agrega los horarios de atención y el teléfono"&rdquo;</div>
+      </div>
+      <p style="font-size:13px;color:var(--ink-soft);margin:12px 0 0;">Es la misma conversación de siempre — solo le sigues preguntando lo que necesites.</p>
+    </div>
+  </div>
+
+  <div id="guide-chatbot" class="panel">
+    <button class="back-btn" data-back="folder-ia">← IA para empezar</button>
+    <h2 class="guide-title">Usar un chatbot como asistente personal</h2>
+    <p class="guide-sub">Sirve para: todo lo que le haría a un amigo que sabe de todo — preguntas, ideas, resúmenes, traducciones.</p>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Los 3 pasos (siempre los mismos)</p>
+      <ol class="steps">
+        <li><div><b>Abra ChatGPT, Gemini o Copilot</b> en su celular o computador.</div></li>
+        <li><div><b>Háblele como le hablaría a una persona:</b> con sus propias palabras.</div></li>
+        <li><div><b>Pida lo que necesite:</b> una idea, un resumen, una traducción, un consejo.</div></li>
+      </ol>
+    </div>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Así se ve la conversación</p>
+      <div class="bubble-row">
+        <div class="bubble me"><span class="bubble-label">Tú</span>"¿Qué puedo cocinar esta semana con lo que tengo en la nevera?"</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"¿Qué tienes? Dime los ingredientes y te armo un menú semanal."</div>
+        <div class="bubble me"><span class="bubble-label">Tú</span>"Tengo pollo, arroz, huevos, cebolla y tomate."</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"Perfecto:<br>Lunes: Arroz con pollo<br>Miércoles: Omelette de tomate<br>Viernes: Arroz frito con huevo<br><b>¿Quieres que te arme la lista de compras?</b>"</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:2px;"><b>Lo importante:</b> No hay que ser experto. Es como mandar un WhatsApp: le escribe lo que necesita y le responde.</div>
+    <div class="block" style="margin-top:16px;"><div class="halftone-corner"></div><p class="block-label">También le puedes pedir</p>
+      <div class="bubble-row">
+        <div class="callout">💡 <b>Pedir ideas:</b> &ldquo;"Dame 5 ideas para sorprender a mi polola"&rdquo;</div>
+        <div class="callout">📚 <b>Entender algo difícil:</b> &ldquo;"Explícame esto como si tuviera 10 años"&rdquo;</div>
+        <div class="callout">🌐 <b>Traducir:</b> &ldquo;"¿Cómo se dice esto en inglés?"&rdquo;</div>
+      </div>
+      <p style="font-size:13px;color:var(--ink-soft);margin:12px 0 0;">Es la misma conversación de siempre — solo le sigues preguntando lo que necesites.</p>
+    </div>
+  </div>
+
+  <div id="guide-que-es-ia" class="panel">
+    <button class="back-btn" data-back="folder-ia">← IA para empezar</button>
+    <h2 class="guide-title">Entender qué es la IA sin aburrirse</h2>
+    <p class="guide-sub">Sirve para: cuando todos hablan de inteligencia artificial y usted no sabe qué es o para qué sirve.</p>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Los 3 pasos (siempre los mismos)</p>
+      <ol class="steps">
+        <li><div><b>Piense en la IA como un asistente</b> que sabe mucho pero no sabe todo.</div></li>
+        <li><div><b>Usted le pregunta</b>, ella le responde. No reemplaza su criterio, lo apoya.</div></li>
+        <li><div><b>Empiece con algo simple:</b> pídale que le resuma una noticia o le explique algo.</div></li>
+      </ol>
+    </div>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Así se ve la conversación</p>
+      <div class="bubble-row">
+        <div class="bubble me"><span class="bubble-label">Tú</span>"¿Qué es la inteligencia artificial? Explícamelo simple."</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"Es un programa que aprendió de miles de textos y puede responder preguntas, escribir, traducir, resumir... como un asistente que sabe de todo. No piensa como usted, pero le ayuda a hacer cosas más rápido."</div>
+        <div class="bubble me"><span class="bubble-label">Tú</span>"¿Y es peligrosa?"</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"Si la usa bien, no. Es una herramienta como un celular: depende de cómo la use. <b>¿Quieres que te muestre algo que puedas hacer ahora mismo?</b>"</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:2px;"><b>Lo importante:</b> La IA no es un monstruo ni una moda pasajera. Es una herramienta que ya está en su vida. Mejor aprender a usarla.</div>
+    <div class="block" style="margin-top:16px;"><div class="halftone-corner"></div><p class="block-label">También le puedes pedir</p>
+      <div class="bubble-row">
+        <div class="callout">🤖 <b>Chatbots vs agentes:</b> &ldquo;"¿Cuál es la diferencia entre un chatbot y un agente de IA?"&rdquo;</div>
+        <div class="callout">⚡ <b>Qué puede y qué no puede:</b> &ldquo;"Qué cosas puede hacer bien la IA y cuáles no"&rdquo;</div>
+        <div class="callout">🔒 <b>Privacidad:</b> &ldquo;"¿Es seguro darle mis datos a la IA?"&rdquo;</div>
+      </div>
+      <p style="font-size:13px;color:var(--ink-soft);margin:12px 0 0;">Es la misma conversación de siempre — solo le sigues preguntando lo que necesites.</p>
+    </div>
+  </div>
+
+  <div id="guide-agentes" class="panel">
+    <button class="back-btn" data-back="folder-ia">← IA para empezar</button>
+    <h2 class="guide-title">Usar un agente de IA para que haga cosas por usted</h2>
+    <p class="guide-sub">Sirve para: cuando necesita que algo se haga solo — programar tareas, conectar apps, hacer trámites repetitivos.</p>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Los 3 pasos (siempre los mismos)</p>
+      <ol class="steps">
+        <li><div><b>Piense en un agente como un ayudante</b> que no solo responde, sino que ejecuta.</div></li>
+        <li><div><b>Dígale qué quiere que haga</b> (no cómo hacerlo).</div></li>
+        <li><div><b>El agente conecta herramientas</b> y le avisa cuando termine.</div></li>
+      </ol>
+    </div>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Así se ve la conversación</p>
+      <div class="bubble-row">
+        <div class="bubble me"><span class="bubble-label">Tú</span>"Organízame las tareas de la semana con prioridades y fechas."</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"Listo:<br>🔴 Alta: Enviar informe (jueves)<br>🟡 Media: Llamar al proveedor (miércoles)<br>🟢 Baja: Actualizar agenda (viernes)<br><b>¿Quieres que te recuerde cada una?</b>"</div>
+        <div class="bubble me"><span class="bubble-label">Tú</span>"Sí, y mándame un resumen el lunes a las 8am"</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"Hecho. Tendrás el resumen el lunes a las 8 en tu correo."</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:2px;"><b>Lo importante:</b> Un chatbot le responde preguntas. Un agente hace cosas. La diferencia es que el agente ejecuta.</div>
+    <div class="block" style="margin-top:16px;"><div class="halftone-corner"></div><p class="block-label">También le puedes pedir</p>
+      <div class="bubble-row">
+        <div class="callout">📧 <b>Enviar correos:</b> &ldquo;"Escríbeme y envíame un correo al proveedor"&rdquo;</div>
+        <div class="callout">📊 <b>Crear informes:</b> &ldquo;"Hazme un informe de ventas del mes pasado"&rdquo;</div>
+        <div class="callout">🔄 <b>Conectar apps:</b> &ldquo;"Conecta mi WhatsApp con mi calendario"&rdquo;</div>
+      </div>
+      <p style="font-size:13px;color:var(--ink-soft);margin:12px 0 0;">Es la misma conversación de siempre — solo le sigues preguntando lo que necesites.</p>
+    </div>
+  </div>
+
+  <div id="guide-prompts" class="panel">
+    <button class="back-btn" data-back="folder-ia">← IA para empezar</button>
+    <h2 class="guide-title">Escribir un buen prompt en 1 minuto</h2>
+    <p class="guide-sub">Sirve para: cuando la IA no le da lo que usted espera, o le responde algo muy general.</p>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Los 3 pasos (siempre los mismos)</p>
+      <ol class="steps">
+        <li><div><b>Dígale quién es usted</b> y para qué lo necesita.</div></li>
+        <li><div><b>Sé específico:</b> en vez de "hágame un texto", diga "hágame un texto de 200 palabras para Instagram sobre X".</div></li>
+        <li><div><b>Pida el tono:</b> formal, casual, gracioso, profesional.</div></li>
+      </ol>
+    </div>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Así se ve la conversación</p>
+      <div class="bubble-row">
+        <div class="bubble me"><span class="bubble-label">Tú</span>"Soy profesor de 30 alumnos. Hazme una actividad divertida para enseñar fracciones."</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"¿De qué curso? ¿Cuánto tiempo tienes? ¿Individual o en grupos?"</div>
+        <div class="bubble me"><span class="bubble-label">Tú</span>"6° básico, 20 minutos, grupos de 4. Que sea con pizza para que se enganchen."</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"<b>La Pizza de Fracciones</b><br>Cada grupo recibe una pizza de papel y debe cortarla en porciones: 1/2, 1/4, 1/8... Gana el grupo que mejor explique por qué 2/4 = 1/2. <b>¿Quieres que te imprima las pizzas?</b>"</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:2px;"><b>Lo importante:</b> Cuanto más específico sea, mejor le va a salir. Piense que le está pidiendo a un ayudante nuevo: si le dice "haz algo", no sabe qué hacer.</div>
+    <div class="block" style="margin-top:16px;"><div class="halftone-corner"></div><p class="block-label">También le puedes pedir</p>
+      <div class="bubble-row">
+        <div class="callout">🎯 <b>Pedir formato específico:</b> &ldquo;"Hazme una lista con viñetas, no un párrafo"&rdquo;</div>
+        <div class="callout">🎭 <b>Cambiar el tono:</b> &ldquo;"Reescribe esto con un tono más profesional"&rdquo;</div>
+        <div class="callout">📏 <b>Controlar extensión:</b> &ldquo;"Hazlo en máximo 100 palabras"&rdquo;</div>
+      </div>
+      <p style="font-size:13px;color:var(--ink-soft);margin:12px 0 0;">Es la misma conversación de siempre — solo le sigues preguntando lo que necesites.</p>
+    </div>
+  </div>
+
+  <div id="guide-errores" class="panel">
+    <button class="back-btn" data-back="folder-ia">← IA para empezar</button>
+    <h2 class="guide-title">Evitar los errores más comunes con IA</h2>
+    <p class="guide-sub">Sirve para: cuando la IA le responde raro, le da información falsa, o no le da lo que usted espera.</p>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Los 3 pasos (siempre los mismos)</p>
+      <ol class="steps">
+        <li><div><b>Si la respuesta no le gusta, pida que la cambie.</b> No tiene que aceptar la primera.</div></li>
+        <li><div><b>No le dé información personal sensible</b> (RUT, contraseñas, datos bancarios).</div></li>
+        <li><div><b>Revise siempre la información importante.</b> La IA a veces se equivoca.</div></li>
+      </ol>
+    </div>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Así se ve la conversación</p>
+      <div class="bubble-row">
+        <div class="bubble me"><span class="bubble-label">Tú</span>"¿Cuánto cuesta un pase de metro en Tokyo?"</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"Un pase de metro en Tokyo cuesta alrededor de 200 yenes (aprox. $1.500 CLP)."</div>
+        <div class="bubble me"><span class="bubble-label">Tú</span>"¿Seguro? Revisa eso, necesito el dato exacto."</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"Tienes razón. El precio depende de la zona: desde 170 hasta 300 yenes. Te recomiendo revisar el sitio oficial de Tokyo Metro."</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:2px;"><b>Lo importante:</b> La IA no es infalible. Úsela con cabeza: no le dé sus datos privados, y siempre verifique lo importante.</div>
+    <div class="block" style="margin-top:16px;"><div class="halftone-corner"></div><p class="block-label">También le puedes pedir</p>
+      <div class="bubble-row">
+        <div class="callout">🚫 <b>Qué no preguntar:</b> &ldquo;"Qué tipo de información no debo darle a la IA"&rdquo;</div>
+        <div class="callout">🔍 <b>Verificar datos:</b> &ldquo;"¿Cómo puedo verificar si lo que me dice la IA es correcto?"&rdquo;</div>
+        <div class="callout">💡 <b>Mejorar respuestas:</b> &ldquo;"¿Por qué la IA me da respuestas tan generales?"&rdquo;</div>
+      </div>
+      <p style="font-size:13px;color:var(--ink-soft);margin:12px 0 0;">Es la misma conversación de siempre — solo le sigues preguntando lo que necesites.</p>
+    </div>
+  </div>
+
+  <div id="guide-primeros-pasos" class="panel">
+    <button class="back-btn" data-back="folder-ia">← IA para empezar</button>
+    <h2 class="guide-title">Empezar a usar IA hoy mismo en 6 pasos</h2>
+    <p class="guide-sub">Sirve para: cuando quiere empezar pero no sabe por dónde ni con qué herramienta.</p>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Los 3 pasos (siempre los mismos)</p>
+      <ol class="steps">
+        <li><div><b>Elija una herramienta:</b> ChatGPT, Gemini o Copilot (todas son gratis).</div></li>
+        <li><div><b>Cree una cuenta</b> con su correo o celular.</div></li>
+        <li><div><b>Empiece con algo simple:</b> pídale que le explique algo o le escriba un texto.</div></li>
+      </ol>
+    </div>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Así se ve la conversación</p>
+      <div class="bubble-row">
+        <div class="bubble me"><span class="bubble-label">Tú</span>[abre ChatGPT en el celular]</div>
+        <div class="bubble me"><span class="bubble-label">Tú</span>"Hola, necesito que me ayudes a escribir un correo para pedir una factura."</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"¡Claro! Cuéntame: ¿A quién se lo mandas? ¿Qué productos necesitas que facturen?"</div>
+        <div class="bubble me"><span class="bubble-label">Tú</span>"A mi proveedor, por 3 laptops, necesito la factura antes del viernes."</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"Aquí tienes tu correo:<br><br>Asunto: Solicitud de factura<br>Estimado proveedor,<br>Solicito la factura por la compra de 3 laptops. Agradecería que me la enviaran antes del viernes.<br>Quedo atento.<br><b>¿Quieres que le agregue algún dato más?</b>"</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:2px;"><b>Lo importante:</b> No necesita ser experto. Solo un celular y ganas de probar. La IA le guía paso a paso, como un amigo paciente.</div>
+    <div class="block" style="margin-top:16px;"><div class="halftone-corner"></div><p class="block-label">También le puedes pedir</p>
+      <div class="bubble-row">
+        <div class="callout">📱 <b>Desde el celular:</b> &ldquo;"¿Cómo uso la IA desde mi celular?"&rdquo;</div>
+        <div class="callout">🎯 <b>Elegir herramienta:</b> &ldquo;"¿Cuál me conviene: ChatGPT, Gemini o Copilot?"&rdquo;</div>
+        <div class="callout">🚀 <b>Primer reto:</b> &ldquo;"Dame un reto simple para practicar con IA esta semana"&rdquo;</div>
+      </div>
+      <p style="font-size:13px;color:var(--ink-soft);margin:12px 0 0;">Es la misma conversación de siempre — solo le sigues preguntando lo que necesites.</p>
+    </div>
+  </div>
+
+  <div id="guide-productividad" class="panel">
+    <button class="back-btn" data-back="folder-negocio">← Automatizar y crecer</button>
+    <h2 class="guide-title">Ser más productivo delegando tareas a la IA</h2>
+    <p class="guide-sub">Sirve para: cuando tiene demasiadas tareas repetitivas y no le alcanza el día.</p>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Los 3 pasos (siempre los mismos)</p>
+      <ol class="steps">
+        <li><div><b>Haga una lista</b> de todo lo que hace repetitivo.</div></li>
+        <li><div><b>Elija una tarea</b> y pídale a la IA que la haga por usted.</div></li>
+        <li><div><b>Repita con la siguiente.</b> Poco a poco, delegue más.</div></li>
+      </ol>
+    </div>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Así se ve la conversación</p>
+      <div class="bubble-row">
+        <div class="bubble me"><span class="bubble-label">Tú</span>"Tengo que escribir 10 correos de seguimiento a clientes. ¿Me ayudas?"</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"¡Sí! Dame los nombres y un resumen de qué les vendiste. Te los escribo en 2 minutos."</div>
+        <div class="bubble me"><span class="bubble-label">Tú</span>"Cliente 1: María, software. Cliente 2: Pedro, consultoría..."</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"Listo, te van los 10 correos personalizados. <b>¿Los mando o prefieres revisarlos?</b>"</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:2px;"><b>Lo importante:</b> No se trata de trabajar más, sino de trabajar mejor. La IA hace lo repetitivo, usted se queda con lo que requiere criterio.</div>
+    <div class="block" style="margin-top:16px;"><div class="halftone-corner"></div><p class="block-label">También le puedes pedir</p>
+      <div class="bubble-row">
+        <div class="callout">📋 <b>Organizar pendientes:</b> &ldquo;"Hazme un listado por prioridad"&rdquo;</div>
+        <div class="callout">⏰ <b>Recordatorios:</b> &ldquo;"Recuérdame el lunes revisar el contrato con el cliente X"&rdquo;</div>
+        <div class="callout">📊 <b>Preparar reuniones:</b> &ldquo;"Prepárame un resumen de avances para el jueves"&rdquo;</div>
+      </div>
+      <p style="font-size:13px;color:var(--ink-soft);margin:12px 0 0;">Es la misma conversación de siempre — solo le sigues preguntando lo que necesites.</p>
+    </div>
+  </div>
+
+  <div id="guide-datos" class="panel">
+    <button class="back-btn" data-back="folder-negocio">← Automatizar y crecer</button>
+    <h2 class="guide-title">Organizar datos desordenados con IA</h2>
+    <p class="guide-sub">Sirve para: cuando tiene una planilla desordenada, una lista de contactos mezclada, o datos en cualquier formato.</p>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Los 3 pasos (siempre los mismos)</p>
+      <ol class="steps">
+        <li><div><b>Copie y pegue</b> los datos desordenados en el chat de IA.</div></li>
+        <li><div><b>Pídale que los organice:</b> en tabla, por categorías, o como necesite.</div></li>
+        <li><div><b>Copie el resultado</b> y péguelo en Excel o donde necesite.</div></li>
+      </ol>
+    </div>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Así se ve la conversación</p>
+      <div class="bubble-row">
+        <div class="bubble me"><span class="bubble-label">Tú</span>[pegas una lista desordenada de clientes]</div>
+        <div class="bubble me"><span class="bubble-label">Tú</span>"Organízame esto en tabla: Nombre, Teléfono, Correo, Última compra, Monto."</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"Listo:<br>| Nombre | Teléfono | Correo | Última compra | Monto |<br>| María López | +5691234 | maria@mail.com | Laptops | $2.500.000 |<br><b>¿Quieres que la exporte a Google Sheets?</b>"</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:2px;"><b>Lo importante:</b> No necesita ser experto en Excel. La IA entiende datos en cualquier formato y los ordena por usted.</div>
+    <div class="block" style="margin-top:16px;"><div class="halftone-corner"></div><p class="block-label">También le puedes pedir</p>
+      <div class="bubble-row">
+        <div class="callout">📊 <b>Crear gráficos:</b> &ldquo;"Hazme un gráfico de ventas por mes"&rdquo;</div>
+        <div class="callout">🔍 <b>Encontrar duplicados:</b> &ldquo;"Revisa si hay clientes duplicados"&rdquo;</div>
+        <div class="callout">📈 <b>Analizar tendencias:</b> &ldquo;"¿Qué productos se vendieron más este trimestre?"&rdquo;</div>
+      </div>
+      <p style="font-size:13px;color:var(--ink-soft);margin:12px 0 0;">Es la misma conversación de siempre — solo le sigues preguntando lo que necesites.</p>
+    </div>
+  </div>
+
+  <div id="guide-metricas" class="panel">
+    <button class="back-btn" data-back="folder-negocio">← Automatizar y crecer</button>
+    <h2 class="guide-title">Analizar métricas sin saber de Excel</h2>
+    <p class="guide-sub">Sirve para: cuando necesita entender números, gráficos o reportes pero no sabe leerlos.</p>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Los 3 pasos (siempre los mismos)</p>
+      <ol class="steps">
+        <li><div><b>Copie los datos</b> o el gráfico (como imagen) al chat de IA.</div></li>
+        <li><div><b>Pídale que lo explique:</b> "Explícame qué me dicen estos números".</div></li>
+        <li><div><b>Pida recomendaciones:</b> "¿Qué debería mejorar según esto?"</div></li>
+      </ol>
+    </div>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Así se ve la conversación</p>
+      <div class="bubble-row">
+        <div class="bubble me"><span class="bubble-label">Tú</span>[pegas una tabla de ventas del mes]</div>
+        <div class="bubble me"><span class="bubble-label">Tú</span>"Explícame qué me dicen estos números y qué debería mejorar."</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"Ventas de marzo:<br>• Productos estrella: Laptops (40%)<br>• En descenso: Accesorios (bajaron 15%)<br>• Oportunidad: cliente promedio compra 2 productos<br><b>Recomendación:</b> Bundle laptop + accesorio. ¿Quieres que te arme la propuesta?"</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:2px;"><b>Lo importante:</b> No necesita ser analista. La IA lee los números y le dice qué significan y qué hacer.</div>
+    <div class="block" style="margin-top:16px;"><div class="halftone-corner"></div><p class="block-label">También le puedes pedir</p>
+      <div class="bubble-row">
+        <div class="callout">📉 <b>Comparar períodos:</b> &ldquo;"Compara ventas de enero vs marzo"&rdquo;</div>
+        <div class="callout">🎯 <b>Predecir tendencias:</b> &ldquo;"¿Qué productos venderán más el próximo mes?"&rdquo;</div>
+        <div class="callout">💡 <b>Sugerir estrategias:</b> &ldquo;"¿Qué me sugieres para aumentar las ventas?"&rdquo;</div>
+      </div>
+      <p style="font-size:13px;color:var(--ink-soft);margin:12px 0 0;">Es la misma conversación de siempre — solo le sigues preguntando lo que necesites.</p>
+    </div>
+  </div>
+
+  <div id="guide-flujos" class="panel">
+    <button class="back-btn" data-back="folder-negocio">← Automatizar y crecer</button>
+    <h2 class="guide-title">Crear flujos automáticos sin saber de programación</h2>
+    <p class="guide-sub">Sirve para: cuando quiere que dos aplicaciones trabajen juntas sin hacerlo manual.</p>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Los 3 pasos (siempre los mismos)</p>
+      <ol class="steps">
+        <li><div><b>Piense en qué tarea se repite</b> (ej: cuando llega un correo, guardarlo en Drive).</div></li>
+        <li><div><b>Dígale a la IA</b> qué quiere que pase, sin pensar en cómo.</div></li>
+        <li><div><b>La IA le dice</b> qué herramienta usar y cómo configurarla.</div></li>
+      </ol>
+    </div>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Así se ve la conversación</p>
+      <div class="bubble-row">
+        <div class="bubble me"><span class="bubble-label">Tú</span>"Quiero que cuando llegue un correo con 'presupuesto', se guarde en Drive."</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"Usa Zapier (gratis).<br>Paso 1: Entra a zapier.com<br>Paso 2: Cuando llegue correo con 'presupuesto'<br>Paso 3: Guardar adjunto en Drive/Carpeta presupuestos<br><b>¿Quieres que te guíe paso a paso?</b>"</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:2px;"><b>Lo importante:</b> No necesita saber programar. Herramientas como Zapier o Make hacen el trabajo pesado. La IA le explica cómo.</div>
+    <div class="block" style="margin-top:16px;"><div class="halftone-corner"></div><p class="block-label">También le puedes pedir</p>
+      <div class="bubble-row">
+        <div class="callout">📧 <b>Correos automáticos:</b> &ldquo;"Automatiza que me respondan correos con info general"&rdquo;</div>
+        <div class="callout">📱 <b>Notificaciones:</b> &ldquo;"Avísame por WhatsApp cuando llegue un correo importante"&rdquo;</div>
+        <div class="callout">📂 <b>Organizar archivos:</b> &ldquo;"Guarda los adjuntos automáticamente en categorías"&rdquo;</div>
+      </div>
+      <p style="font-size:13px;color:var(--ink-soft);margin:12px 0 0;">Es la misma conversación de siempre — solo le sigues preguntando lo que necesites.</p>
+    </div>
+  </div>
+
+  <div id="guide-integrar" class="panel">
+    <button class="back-btn" data-back="folder-negocio">← Automatizar y crecer</button>
+    <h2 class="guide-title">Conectar tus apps para que trabajen juntas</h2>
+    <p class="guide-sub">Sirve para: cuando usa WhatsApp, Gmail, Notion, Drive y demás, pero cada uno por separado.</p>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Los 3 pasos (siempre los mismos)</p>
+      <ol class="steps">
+        <li><div><b>Liste las apps que usa</b> todos los días.</div></li>
+        <li><div><b>Pídale a la IA</b> cómo conectarlas.</div></li>
+        <li><div><b>Configure la integración</b> con la guía que le dé.</div></li>
+      </ol>
+    </div>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Así se ve la conversación</p>
+      <div class="bubble-row">
+        <div class="bubble me"><span class="bubble-label">Tú</span>"Uso WhatsApp, Gmail y Calendar. ¿Cómo los conecto?"</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"3 integraciones simples:<br>1. WhatsApp → Gmail: Recibe mensajes por correo<br>2. Gmail → Calendar: Crea eventos automáticos<br>3. Calendar → WhatsApp: Recibe recordatorios<br><b>¿Quieres que te guíe para configurar la primera?</b>"</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:2px;"><b>Lo importante:</b> Cuando sus apps trabajan juntas, usted gana tiempo. La integración es como tener una secretaria digital.</div>
+    <div class="block" style="margin-top:16px;"><div class="halftone-corner"></div><p class="block-label">También le puedes pedir</p>
+      <div class="bubble-row">
+        <div class="callout">🤖 <b>Bot de WhatsApp:</b> &ldquo;"¿Cómo creo un bot que responda preguntas frecuentes?"&rdquo;</div>
+        <div class="callout">📊 <b>Sincronizar datos:</b> &ldquo;"Que las ventas se actualicen en mi planilla automáticamente"&rdquo;</div>
+        <div class="callout">🔔 <b>Notificaciones:</b> &ldquo;"Avísame solo de los correos urgentes"&rdquo;</div>
+      </div>
+      <p style="font-size:13px;color:var(--ink-soft);margin:12px 0 0;">Es la misma conversación de siempre — solo le sigues preguntando lo que necesites.</p>
+    </div>
+  </div>
+
+  <div id="guide-ventas" class="panel">
+    <button class="back-btn" data-back="folder-negocio">← Automatizar y crecer</button>
+    <h2 class="guide-title">Organizar ventas y clientes con IA</h2>
+    <p class="guide-sub">Sirve para: cuando tiene clientes por todos lados y no sabe quién le debe, quién compró, o qué ofrecer.</p>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Los 3 pasos (siempre los mismos)</p>
+      <ol class="steps">
+        <li><div><b>Exporte o copie</b> la lista de clientes y ventas.</div></li>
+        <li><div><b>Pídale a la IA</b> que la organice y le dé insights.</div></li>
+        <li><div><b>Pida acciones concretas:</b> "¿A quién le puedo vender algo más?"</div></li>
+      </ol>
+    </div>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Así se ve la conversación</p>
+      <div class="bubble-row">
+        <div class="bubble me"><span class="bubble-label">Tú</span>[pegas tu lista de clientes y compras]</div>
+        <div class="bubble me"><span class="bubble-label">Tú</span>"Organízame esto y dime: ¿quiénes son mis mejores clientes?"</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"Tus 5 mejores representan el 60% de ventas:<br>1. María López - $2.5M - laptops cada 6 meses<br>2. Pedro Soto - $1.8M - paquete completo<br><b>Recomendación:</b> Escríbele a María, le toca renovar. ¿Quieres el correo?"</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:2px;"><b>Lo importante:</b> La IA no reemplaza su relación con el cliente. Le recuerda quién es quién, qué compró, y cuándo volver a hablarle.</div>
+    <div class="block" style="margin-top:16px;"><div class="halftone-corner"></div><p class="block-label">También le puedes pedir</p>
+      <div class="bubble-row">
+        <div class="callout">📧 <b>Seguimiento:</b> &ldquo;"Escríbe un correo a clientes sin compra reciente"&rdquo;</div>
+        <div class="callout">🎯 <b>Segmentar:</b> &ldquo;"Separa mis clientes por tipo y frecuencia"&rdquo;</div>
+        <div class="callout">💰 <b>Predecir:</b> &ldquo;"¿Qué ventas espero el próximo mes?"&rdquo;</div>
+      </div>
+      <p style="font-size:13px;color:var(--ink-soft);margin:12px 0 0;">Es la misma conversación de siempre — solo le sigues preguntando lo que necesites.</p>
+    </div>
+  </div>
+
+  <div id="guide-contenido" class="panel">
+    <button class="back-btn" data-back="folder-negocio">← Automatizar y crecer</button>
+    <h2 class="guide-title">Crear contenido digital con IA</h2>
+    <p class="guide-sub">Sirve para: cuando necesita publicar pero no tiene tiempo, ideas, o no sabe escribir bien.</p>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Los 3 pasos (siempre los mismos)</p>
+      <ol class="steps">
+        <li><div><b>Cuéntale a la IA</b> para quién es el contenido y en qué plataforma.</div></li>
+        <li><div><b>Pida el formato:</b> publicación, story, reel, correo.</div></li>
+        <li><div><b>Revise y ajuste.</b> Es su contenido, no de la IA.</div></li>
+      </ol>
+    </div>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Así se ve la conversación</p>
+      <div class="bubble-row">
+        <div class="bubble me"><span class="bubble-label">Tú</span>"Necesito 3 publicaciones para Instagram sobre mi tienda de tecnología."</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"Te van las 3:<br>1. 📱 '¿Sabías que una laptop puede ser tu mejor inversión?...'<br>2. 💡 '3 errores al comprar tecnología'<br>3. 🚀 'Cómo elegir la tecnología correcta para tu negocio'<b>¿Quieres que las adapte a un tono más casual?</b>"</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:2px;"><b>Lo importante:</b> La IA le da el borrador, pero el toque final es suyo. Agregue sus fotos, su voz, su estilo.</div>
+    <div class="block" style="margin-top:16px;"><div class="halftone-corner"></div><p class="block-label">También le puedes pedir</p>
+      <div class="bubble-row">
+        <div class="callout">📸 <b>Ideas para stories:</b> &ldquo;"Dame 5 ideas de stories esta semana"&rdquo;</div>
+        <div class="callout">✍️ <b>Adaptar contenido:</b> &ldquo;"Convierte este texto largo en 3 publicaciones cortas"&rdquo;</div>
+        <div class="callout">📧 <b>Newsletter:</b> &ldquo;"Escríbeme un newsletter mensual para mis clientes"&rdquo;</div>
+      </div>
+      <p style="font-size:13px;color:var(--ink-soft);margin:12px 0 0;">Es la misma conversación de siempre — solo le sigues preguntando lo que necesites.</p>
+    </div>
+  </div>
+
+  <div id="guide-atencion-cliente" class="panel">
+    <button class="back-btn" data-back="folder-negocio">← Automatizar y crecer</button>
+    <h2 class="guide-title">Atender clientes 24/7 con IA</h2>
+    <p class="guide-sub">Sirve para: cuando no puede responder a todos o pierde ventas por no contestar a tiempo.</p>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Los 3 pasos (siempre los mismos)</p>
+      <ol class="steps">
+        <li><div><b>Identifique las preguntas frecuentes</b> de sus clientes.</div></li>
+        <li><div><b>Cree respuestas con IA</b> para cada una.</div></li>
+        <li><div><b>Ponlas en un chatbot</b> o en su sitio web.</div></li>
+      </ol>
+    </div>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Así se ve la conversación</p>
+      <div class="bubble-row">
+        <div class="bubble me"><span class="bubble-label">Tú</span>"Mis clientes siempre preguntan: precios, horarios y stock. ¿Cómo automatizo?"</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"Creemos un chatbot:<br>1. Recopila las 10 preguntas frecuentes<br>2. Escríbeme las respuestas<br>3. Te ayudo a ponerlas en WhatsApp o web<br><b>¿Empezamos?</b>"</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:2px;"><b>Lo importante:</b> Un chatbot responde las preguntas simples para que usted se enfoque en vender y resolver lo complejo.</div>
+    <div class="block" style="margin-top:16px;"><div class="halftone-corner"></div><p class="block-label">También le puedes pedir</p>
+      <div class="bubble-row">
+        <div class="callout">💬 <b>Crear respuestas:</b> &ldquo;"Escríbeme respuestas para las 5 preguntas más frecuentes"&rdquo;</div>
+        <div class="callout">📱 <b>WhatsApp Business:</b> &ldquo;"¿Cómo configuro respuestas automáticas?"&rdquo;</div>
+        <div class="callout">🔄 <b>Mejorar respuestas:</b> &ldquo;"¿Cómo hago que el chatbot aprenda?"&rdquo;</div>
+      </div>
+      <p style="font-size:13px;color:var(--ink-soft);margin:12px 0 0;">Es la misma conversación de siempre — solo le sigues preguntando lo que necesites.</p>
+    </div>
+  </div>
+
+  <div id="guide-escalar" class="panel">
+    <button class="back-btn" data-back="folder-negocio">← Automatizar y crecer</button>
+    <h2 class="guide-title">Crecer sin contratar más personal</h2>
+    <p class="guide-sub">Sirve para: cuando su negocio crece pero no puede seguir contratando gente.</p>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Los 3 pasos (siempre los mismos)</p>
+      <ol class="steps">
+        <li><div><b>Identifique qué tareas le quitan más tiempo.</b></div></li>
+        <li><div><b>Automatice lo que se pueda:</b> respuestas, correos, organización.</div></li>
+        <li><div><b>Enfóquese en lo que solo usted puede hacer:</b> vender, crear, decidir.</div></li>
+      </ol>
+    </div>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Así se ve la conversación</p>
+      <div class="bubble-row">
+        <div class="bubble me"><span class="bubble-label">Tú</span>"Mi negocio creció y ya no doy abasto. No puedo contratar. ¿Qué hago?"</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"Optimicemos. ¿Qué tareas te quitan más tiempo?"</div>
+        <div class="bubble me"><span class="bubble-label">Tú</span>"Correos, pedidos, informes, seguimiento a clientes..."</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"Automate estas 3 primero:<br>1. Correos → respuestas automáticas<br>2. Pedidos → planilla con IA<br>3. Informes → la IA los genera<br>Ahorras 10 horas/semana. ¿Empezamos?"</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:2px;"><b>Lo importante:</b> Crecer no es contratar más. Es hacer más con lo que tiene. La IA trabaja 24/7, no se enferma, y no le pide aumento.</div>
+    <div class="block" style="margin-top:16px;"><div class="halftone-corner"></div><p class="block-label">También le puedes pedir</p>
+      <div class="bubble-row">
+        <div class="callout">📈 <b>Plan de crecimiento:</b> &ldquo;"Hazme un plan para crecer en 3 meses con IA"&rdquo;</div>
+        <div class="callout">⏰ <b>Ahorrar tiempo:</b> &ldquo;"¿Qué automatizo primero para ahorrar más tiempo?"&rdquo;</div>
+        <div class="callout">💰 <b>Reducir costos:</b> &ldquo;"¿Cómo bajo costos operativos con IA?"&rdquo;</div>
+      </div>
+      <p style="font-size:13px;color:var(--ink-soft);margin:12px 0 0;">Es la misma conversación de siempre — solo le sigues preguntando lo que necesites.</p>
+    </div>
+  </div>
+
+  <div id="guide-onboarding" class="panel">
+    <button class="back-btn" data-back="folder-negocio">← Automatizar y crecer</button>
+    <h2 class="guide-title">Capacitar nuevos empleados con IA</h2>
+    <p class="guide-sub">Sirve para: cuando contrata a alguien nuevo y no tiene tiempo de enseñarle todo.</p>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Los 3 pasos (siempre los mismos)</p>
+      <ol class="steps">
+        <li><div><b>Cree una guía de inducción con IA</b> (paso a paso de todo lo que necesita saber).</div></li>
+        <li><div><b>Pregúntele a la IA</b> que haga simulaciones de situaciones reales.</div></li>
+        <li><div><b>Use la IA como tutor:</b> que el nuevo le pregunte a la IA en vez de interrumpirlo a usted.</div></li>
+      </ol>
+    </div>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Así se ve la conversación</p>
+      <div class="bubble-row">
+        <div class="bubble me"><span class="bubble-label">Tú</span>"Contraté a alguien nuevo para la tienda. ¿Cómo lo capacito rápido?"</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"Onboarding con IA:<br>1. Escríbeme los procedimientos básicos<br>2. Te armo una guía paso a paso<br>3. Creamos preguntas de práctica<br><b>¿Qué es lo primero que necesita saber?</b>"</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:2px;"><b>Lo importante:</b> La IA le da al nuevo un tutor 24/7 para preguntas básicas, mientras usted se enfoca en lo importante.</div>
+    <div class="block" style="margin-top:16px;"><div class="halftone-corner"></div><p class="block-label">También le puedes pedir</p>
+      <div class="bubble-row">
+        <div class="callout">📝 <b>Checklist de inducción:</b> &ldquo;"Hazme un checklist de las primeras 2 semanas"&rdquo;</div>
+        <div class="callout">🎓 <b>Quiz de práctica:</b> &ldquo;"Diseña 10 preguntas para que aprenda los procesos"&rdquo;</div>
+        <div class="callout">📚 <b>Manual:</b> &ldquo;"Escríbeme un manual de procedimientos para mi tienda"&rdquo;</div>
+      </div>
+      <p style="font-size:13px;color:var(--ink-soft);margin:12px 0 0;">Es la misma conversación de siempre — solo le sigues preguntando lo que necesites.</p>
+    </div>
+  </div>
+
+  <div id="guide-seguridad" class="panel">
+    <button class="back-btn" data-back="folder-negocio">← Automatizar y crecer</button>
+    <h2 class="guide-title">Proteger tu negocio con IA</h2>
+    <p class="guide-sub">Sirve para: cuando quiere usar IA pero le da miedo que le roben datos o hagan fraude.</p>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Los 3 pasos (siempre los mismos)</p>
+      <ol class="steps">
+        <li><div><b>Identifique qué datos son sensibles</b> (clientes, finanzas, contraseñas).</div></li>
+        <li><div><b>Pídale a la IA</b> que le dé reglas básicas de seguridad.</div></li>
+        <li><div><b>Implemente lo más simple primero:</b> contraseñas fuertes, 2 factores, respaldos.</div></li>
+      </ol>
+    </div>
+    <div class="block"><div class="halftone-corner"></div><p class="block-label">Así se ve la conversación</p>
+      <div class="bubble-row">
+        <div class="bubble me"><span class="bubble-label">Tú</span>"Quiero usar IA pero me da miedo que me hackeen."</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>"Lo básico:<br>1. Nunca le des contraseñas ni RUT a la IA<br>2. Activa verificación en 2 pasos<br>3. Usa contraseñas diferentes<br><b>¿Quieres que te ayude a crear contraseñas seguras?</b>"</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:2px;"><b>Lo importante:</b> La IA es segura si la usa bien. No es peligrosa si toma precauciones básicas.</div>
+    <div class="block" style="margin-top:16px;"><div class="halftone-corner"></div><p class="block-label">También le puedes pedir</p>
+      <div class="bubble-row">
+        <div class="callout">🔒 <b>Contraseñas seguras:</b> &ldquo;"Genera 5 contraseñas seguras para mis cuentas"&rdquo;</div>
+        <div class="callout">🛡️ <b>Detectar fraudes:</b> &ldquo;"¿Cómo detecto un correo spam o fraude?"&rdquo;</div>
+        <div class="callout">💾 <b>Respaldos:</b> &ldquo;"¿Cómo hago respaldos automáticos?"&rdquo;</div>
+      </div>
+      <p style="font-size:13px;color:var(--ink-soft);margin:12px 0 0;">Es la misma conversación de siempre — solo le sigues preguntando lo que necesites.</p>
+    </div>
+  </div>
+
+
+  <footer class="footer-social">
+  <a href="https://github.com/laotracarrera/la-otra-carrera-" target="_blank" aria-label="GitHub">
+        <svg width="22" height="22" viewBox="0 0 16 16" fill="currentColor">
+      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
+      0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13
+      -.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66
+      .07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15
+      -.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0
+      1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82
+      1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48
+      0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+    </svg>
+  </a>
+
+  <button aria-label="Discord" onclick="showTooltip('discord')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M20.3 4.4A19.7 19.7 0 0 0 15.5 3l-.3.6a14.7 14.7 0 0 1 4.2 1.6
+      c-3.6-1.7-7.9-1.7-11.5 0A14 14 0 0 1 8 3.6L7.7 3a19.7 19.7 0 0 0-4.8 1.4
+      C.4 9 -.4 13.4.1 17.8a20 20 0 0 0 5.7 2.9l1-1.3a12.6 12.6 0 0 1-1.9-.9l.4-.4
+      c3.6 1.7 7.6 1.7 11.2 0l.4.4c-.6.4-1.2.6-1.9.9l1 1.3a20 20 0 0 0 5.7-2.9
+      c.6-5.1-.7-9.5-2.4-13.4ZM8.5 15.3c-1.1 0-2-1-2-2.2s.9-2.2 2-2.2 2 1 2 2.2
+      -.9 2.2-2 2.2Zm7 0c-1.1 0-2-1-2-2.2s.9-2.2 2-2.2 2 1 2 2.2-.9 2.2-2 2.2Z"/>
+    </svg>
+  </button>
+
+  <button aria-label="Mastodon" onclick="showTooltip('mastodon')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M21.3 6.9c-.3-2.4-2.4-4.3-4.9-4.7C12.9 1.7 9.1 1.7 5.6 2.2
+      3.1 2.6 1 4.5.7 6.9.4 9.1.4 11.6.7 13.8c.4 2.7 2.6 4.7 5.3 5
+      1.2.1 2.4.2 3.5.1v-2.6c-1 .1-2 .1-3.2 0-1.7-.1-2.9-1.2-3.2-2.9
+      -.1-.5-.1-1.1-.1-1.7.9.6 2.1 1 3.6 1.1v-2.4c-1.3-.1-2.3-.4-3-.9
+      -.9-.6-1.4-1.6-1.4-2.9 0-1.9 1.2-3.4 3.5-3.4 2.1 0 3.3 1.4 3.3 3.6v4.9
+      h2.5V9.6c0-2.2 1.2-3.6 3.3-3.6 2.3 0 3.5 1.5 3.5 3.4 0 1.3-.5 2.3-1.4 2.9
+      -.7.5-1.7.8-3 .9v2.4c1.5-.1 2.7-.5 3.6-1.1 0 .6 0 1.2-.1 1.7
+      -.3 1.7-1.5 2.8-3.2 2.9-1.2.1-2.2.1-3.2 0v2.6c1.1.1 2.3 0 3.5-.1
+      2.7-.3 4.9-2.3 5.3-5 .3-2.2.3-4.7 0-6.9Z"/>
+    </svg>
+  </button>
+
+  <div class="social-tooltip" id="socialTooltip">⚠ Todavía no — necesita autorización</div>
+</footer>
+
+<script>
+  function showTooltip(platform) {
+    const tip = document.getElementById('socialTooltip');
+    tip.classList.add('show');
+    clearTimeout(window._tipTimeout);
+    window._tipTimeout = setTimeout(() => tip.classList.remove('show'), 2500);
+
+    const monito = document.getElementById('monitoImg');
+    monito.classList.remove('shake');
+    void monito.offsetWidth;
+    monito.classList.add('shake');
+  }
+</script>
+
+  <script>
+    function showPanel(id){
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      window.scrollTo({top:0, behavior:'instant'});
+    }
+    document.querySelectorAll('[data-target]').forEach(el => {
+      el.addEventListener('click', () => showPanel(el.dataset.target));
+    });
+    document.querySelectorAll('[data-back]').forEach(el => {
+      el.addEventListener('click', () => showPanel(el.dataset.back));
+    });
+  </script>
+</body>
+</html>
 
   <div class="cta-zone">
     <a class="cta-btn" href="#" id="whatsapp-link">Escríbenos</a>
