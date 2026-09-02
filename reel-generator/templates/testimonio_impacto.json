@@ -1,0 +1,43 @@
+{
+  "nombre": "Testimonio de Impacto",
+  "descripcion": "Estructura pensada para contar la historia real de una persona beneficiada por La Otra Carrera: presentación, testimonio y cierre inspirador.",
+  "plataforma_recomendada": "tiktok",
+  "escenas": [
+    {
+      "clip_index": 0,
+      "inicio": 0,
+      "duracion": 3,
+      "texto": {
+        "contenido": "Esta es la historia de un cambio real",
+        "posicion": "top",
+        "aparece_en": 0.3,
+        "duracion_texto": 2.5,
+        "tamano_fuente": 56
+      }
+    },
+    {
+      "clip_index": 1,
+      "inicio": 0,
+      "duracion": 12,
+      "texto": {
+        "contenido": "\"Gracias a La Otra Carrera pude estudiar y cambiar mi futuro\"",
+        "posicion": "bottom",
+        "aparece_en": 1,
+        "duracion_texto": 9,
+        "tamano_fuente": 50
+      }
+    },
+    {
+      "clip_index": 2,
+      "inicio": 0,
+      "duracion": 4,
+      "texto": {
+        "contenido": "Tu apoyo hace posible más historias como esta",
+        "posicion": "center",
+        "aparece_en": 0.4,
+        "duracion_texto": 3.2,
+        "tamano_fuente": 56
+      }
+    }
+  ]
+}
