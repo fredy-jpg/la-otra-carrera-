@@ -1,4 +1,0 @@
-# Este proyecto usa únicamente la librería estándar de Python (3.9+).
-# La única dependencia externa es tener FFmpeg y FFprobe instalados en el
-# sistema (no son paquetes de Python, se instalan a nivel de sistema
-# operativo). Ver README.md para instrucciones de instalación.
