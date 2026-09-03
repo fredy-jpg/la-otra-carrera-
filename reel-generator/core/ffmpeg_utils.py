@@ -66,6 +66,33 @@ def obtener_duracion(video_path: str | Path) -> float:
     return float(datos["format"]["duration"])
 
 
+def envolver_texto(texto: str, ancho_px: int, tamano_fuente: int) -> str:
+    """Inserta saltos de línea para que ``texto`` no se salga del cuadro.
+
+    ``drawtext`` no ajusta el texto automáticamente: una línea más ancha
+    que el video se corta en los bordes. Se estima el ancho de cada
+    palabra con un factor fijo (fuentes bold sans rondan ~0.58 * tamaño de
+    fuente por carácter) y se arma cada línea greedy, respetando ese límite.
+    """
+
+    ancho_util = ancho_px * 0.86
+    max_caracteres = max(int(ancho_util / (tamano_fuente * 0.58)), 1)
+
+    lineas: list[str] = []
+    linea_actual = ""
+    for palabra in texto.split():
+        candidata = f"{linea_actual} {palabra}".strip()
+        if len(candidata) <= max_caracteres or not linea_actual:
+            linea_actual = candidata
+        else:
+            lineas.append(linea_actual)
+            linea_actual = palabra
+    if linea_actual:
+        lineas.append(linea_actual)
+
+    return "\n".join(lineas)
+
+
 def escapar_texto_drawtext(texto: str) -> str:
     """Escapa caracteres especiales para el filtro ``drawtext`` de FFmpeg."""
 
@@ -110,9 +137,12 @@ def recortar_y_ajustar_escena(
         filtros.append(f"fade=t=out:st={max(duracion - 0.4, 0):.2f}:d=0.4")
 
     if texto:
-        contenido = escapar_texto_drawtext(texto.get("contenido", ""))
         posicion = texto.get("posicion", "bottom")
         tamano_fuente = texto.get("tamano_fuente", 56)
+        contenido_envuelto = envolver_texto(
+            texto.get("contenido", ""), ancho, tamano_fuente
+        )
+        contenido = escapar_texto_drawtext(contenido_envuelto)
         color = texto.get("color", "white")
         color_borde = texto.get("color_borde", "black")
         aparece_en = float(texto.get("aparece_en", 0))

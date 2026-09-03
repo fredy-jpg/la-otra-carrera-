@@ -1,0 +1,55 @@
+{
+  "nombre": "Alerta de Estafa",
+  "descripcion": "Gancho de seguridad + cómo usar la IA para detectar un fraude por WhatsApp/correo + cierre con marca.",
+  "plataforma_recomendada": "instagram_reel",
+  "escenas": [
+    {
+      "clip_index": 0,
+      "inicio": 0,
+      "duracion": 4,
+      "texto": {
+        "contenido": "¿Te llegó un mensaje raro pidiéndote datos o plata?",
+        "posicion": "top",
+        "aparece_en": 0.3,
+        "duracion_texto": 3.5,
+        "tamano_fuente": 58
+      }
+    },
+    {
+      "clip_index": 1,
+      "inicio": 0,
+      "duracion": 6,
+      "texto": {
+        "contenido": "Antes de responder: mándale ese mensaje a tu IA y pregúntale si es una estafa.",
+        "posicion": "bottom",
+        "aparece_en": 0.4,
+        "duracion_texto": 5.2,
+        "tamano_fuente": 50
+      }
+    },
+    {
+      "clip_index": 2,
+      "inicio": 0,
+      "duracion": 6,
+      "texto": {
+        "contenido": "Te dice las señales de alerta al instante. Gratis. En segundos.",
+        "posicion": "center",
+        "aparece_en": 0.4,
+        "duracion_texto": 5,
+        "tamano_fuente": 54
+      }
+    },
+    {
+      "clip_index": 3,
+      "inicio": 0,
+      "duracion": 4,
+      "texto": {
+        "contenido": "La Otra Carrera — te enseñamos cómo",
+        "posicion": "bottom",
+        "aparece_en": 0.3,
+        "duracion_texto": 3.5,
+        "tamano_fuente": 48
+      }
+    }
+  ]
+}
