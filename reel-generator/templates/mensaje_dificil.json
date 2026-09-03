@@ -1,0 +1,55 @@
+{
+  "nombre": "Mensaje Difícil",
+  "descripcion": "Cómo pedirle a la IA que te ayude a escribir un mensaje incómodo o difícil.",
+  "plataforma_recomendada": "instagram_reel",
+  "escenas": [
+    {
+      "clip_index": 0,
+      "inicio": 0,
+      "duracion": 4,
+      "texto": {
+        "contenido": "¿Tienes que mandar un mensaje incómodo y no sabes cómo empezar?",
+        "posicion": "top",
+        "aparece_en": 0.3,
+        "duracion_texto": 3.5,
+        "tamano_fuente": 54
+      }
+    },
+    {
+      "clip_index": 1,
+      "inicio": 0,
+      "duracion": 6,
+      "texto": {
+        "contenido": "Cuéntale a tu IA la situación con tus propias palabras, como se la contarías a un amigo.",
+        "posicion": "bottom",
+        "aparece_en": 0.4,
+        "duracion_texto": 5.2,
+        "tamano_fuente": 48
+      }
+    },
+    {
+      "clip_index": 2,
+      "inicio": 0,
+      "duracion": 6,
+      "texto": {
+        "contenido": "Te arma el mensaje con el tono justo: firme, amable o directo. Tú decides.",
+        "posicion": "center",
+        "aparece_en": 0.4,
+        "duracion_texto": 5,
+        "tamano_fuente": 50
+      }
+    },
+    {
+      "clip_index": 3,
+      "inicio": 0,
+      "duracion": 4,
+      "texto": {
+        "contenido": "La Otra Carrera — te enseñamos cómo",
+        "posicion": "bottom",
+        "aparece_en": 0.3,
+        "duracion_texto": 3.5,
+        "tamano_fuente": 48
+      }
+    }
+  ]
+}

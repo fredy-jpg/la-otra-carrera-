@@ -1,0 +1,55 @@
+{
+  "nombre": "Primeros Pasos",
+  "descripcion": "Empujón de energía para arrancar hoy con la IA, sin miedo, en 3 pasos.",
+  "plataforma_recomendada": "instagram_reel",
+  "escenas": [
+    {
+      "clip_index": 0,
+      "inicio": 0,
+      "duracion": 4,
+      "texto": {
+        "contenido": "¿Sigues esperando el momento perfecto para empezar a usar la IA?",
+        "posicion": "top",
+        "aparece_en": 0.3,
+        "duracion_texto": 3.5,
+        "tamano_fuente": 52
+      }
+    },
+    {
+      "clip_index": 1,
+      "inicio": 0,
+      "duracion": 6,
+      "texto": {
+        "contenido": "No hace falta curso, ni tarjeta, ni saber de tecnología. Empiezas hoy, gratis.",
+        "posicion": "bottom",
+        "aparece_en": 0.4,
+        "duracion_texto": 5.2,
+        "tamano_fuente": 48
+      }
+    },
+    {
+      "clip_index": 2,
+      "inicio": 0,
+      "duracion": 6,
+      "texto": {
+        "contenido": "Abre el chat. Escribe lo que necesitas resolver hoy. Eso es todo.",
+        "posicion": "center",
+        "aparece_en": 0.4,
+        "duracion_texto": 5,
+        "tamano_fuente": 52
+      }
+    },
+    {
+      "clip_index": 3,
+      "inicio": 0,
+      "duracion": 4,
+      "texto": {
+        "contenido": "La Otra Carrera — empieza hoy",
+        "posicion": "bottom",
+        "aparece_en": 0.3,
+        "duracion_texto": 3.5,
+        "tamano_fuente": 48
+      }
+    }
+  ]
+}
