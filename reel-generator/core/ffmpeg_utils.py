@@ -126,12 +126,29 @@ def recortar_y_ajustar_escena(
     entrada/salida (fade) y, opcionalmente, agrega un texto superpuesto.
     """
 
-    filtros = [
-        f"scale={ancho}:{alto}:force_original_aspect_ratio=increase",
-        f"crop={ancho}:{alto}",
-        f"fps={fps}",
-        "fade=t=in:st=0:d=0.4",
-    ]
+    es_imagen = Path(clip_origen).suffix.lower() in (
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".webp",
+    )
+
+    if es_imagen:
+        # Una imagen pequeña (ej. un logo) se muestra completa, centrada
+        # sobre fondo negro, en vez de recortarla para llenar el cuadro.
+        filtros = [
+            f"scale={ancho}:{alto}:force_original_aspect_ratio=decrease:flags=lanczos",
+            f"pad={ancho}:{alto}:(ow-iw)/2:(oh-ih)/2:color=black",
+            f"fps={fps}",
+            "fade=t=in:st=0:d=0.4",
+        ]
+    else:
+        filtros = [
+            f"scale={ancho}:{alto}:force_original_aspect_ratio=increase",
+            f"crop={ancho}:{alto}",
+            f"fps={fps}",
+            "fade=t=in:st=0:d=0.4",
+        ]
 
     if duracion is not None:
         filtros.append(f"fade=t=out:st={max(duracion - 0.4, 0):.2f}:d=0.4")
@@ -175,12 +192,15 @@ def recortar_y_ajustar_escena(
 
         filtros.append(drawtext)
 
-    comando = [
-        "ffmpeg",
-        "-y",
-        "-ss",
-        str(inicio),
-    ]
+    comando = ["ffmpeg", "-y"]
+    if es_imagen:
+        if duracion is None:
+            raise ValueError(
+                "Una escena con imagen estática requiere 'duracion' en el template."
+            )
+        comando += ["-loop", "1"]
+    else:
+        comando += ["-ss", str(inicio)]
     if duracion is not None:
         comando += ["-t", str(duracion)]
     comando += [

@@ -8,7 +8,7 @@
       "inicio": 0,
       "duracion": 4,
       "texto": {
-        "contenido": "¿Sigues esperando el momento perfecto para empezar a usar la IA?",
+        "contenido": "¿Sigues esperando el momento perfecto para empezar?",
         "posicion": "top",
         "aparece_en": 0.3,
         "duracion_texto": 3.5,
@@ -44,11 +44,22 @@
       "inicio": 0,
       "duracion": 4,
       "texto": {
-        "contenido": "La Otra Carrera — empieza hoy",
+        "contenido": "Nosotros corremos la otra carrera, la que todos queremos ganar.",
         "posicion": "bottom",
         "aparece_en": 0.3,
-        "duracion_texto": 3.5,
-        "tamano_fuente": 48
+        "duracion_texto": 3.6,
+        "tamano_fuente": 46
+      }
+    },
+    {
+      "clip_index": 4,
+      "duracion": 2.5,
+      "texto": {
+        "contenido": "@another_race__bot",
+        "posicion": "bottom",
+        "aparece_en": 0.2,
+        "duracion_texto": 2.2,
+        "tamano_fuente": 40
       }
     }
   ]
