@@ -32,7 +32,7 @@
       "inicio": 0,
       "duracion": 6,
       "texto": {
-        "contenido": "Abre el chat. Escribe lo que necesitas resolver hoy. Eso es todo.",
+        "contenido": "Abre el chat. Escribe lo que necesitas resolver hoy. Te enseñamos cómo.",
         "posicion": "center",
         "aparece_en": 0.4,
         "duracion_texto": 5,

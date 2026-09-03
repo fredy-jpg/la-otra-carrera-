@@ -20,7 +20,7 @@
       "inicio": 0,
       "duracion": 6,
       "texto": {
-        "contenido": "Pega tus notas desordenadas o la transcripción en el chat de tu IA.",
+        "contenido": "Para la próxima reunión: ve grabando el audio, o pásale tus notas a la IA al terminar.",
         "posicion": "bottom",
         "aparece_en": 0.4,
         "duracion_texto": 5.2,
