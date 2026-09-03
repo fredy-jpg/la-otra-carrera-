@@ -8,12 +8,12 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="La Otra Carrera — Archivador de guías">
 <meta property="og:description" content="Guías fáciles para usar la IA en el día a día: entender comunicados del colegio, boletas y más. Busca tu tema, sigue los 3 pasos, listo.">
-<meta property="og:image" content="https://laotracarrera.github.io/la-otra-carrera-/images/mascot-badge.png">
-<meta property="og:url" content="https://laotracarrera.github.io/la-otra-carrera-/">
+<meta property="og:image" content="https://fredy-jpg.github.io/la-otra-carrera-/images/mascot-badge.png">
+<meta property="og:url" content="https://fredy-jpg.github.io/la-otra-carrera-/">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="La Otra Carrera — Archivador de guías">
 <meta name="twitter:description" content="Guías fáciles para usar la IA en el día a día: entender comunicados del colegio, boletas y más.">
-<meta name="twitter:image" content="https://laotracarrera.github.io/la-otra-carrera-/images/mascot-badge.png">
+<meta name="twitter:image" content="https://fredy-jpg.github.io/la-otra-carrera-/images/mascot-badge.png">
 <link rel="icon" href="images/mascot-badge.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Permanent+Marker&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -618,7 +618,7 @@
     <h1 class="home-title">Archivador de Guías</h1>
     <p class="home-sub">Elegí una carpeta y seguí los pasos. Sin vueltas.</p>
     <div class="folder-grid">
-      <button class="folder" data-target="folder-colegio"><div class="folder-emoji">🎒</div><div class="folder-name">Colegio y niños</div><div class="folder-count">1 guía</div></button>
+      <button class="folder" data-target="folder-colegio"><div class="folder-emoji">🎒</div><div class="folder-name">Colegio y niños</div><div class="folder-count">2 guías</div></button>
       <button class="folder" data-target="folder-cuentas"><div class="folder-emoji">🧾</div><div class="folder-name">Cuentas y boletas</div><div class="folder-count">1 guía</div></button>
       <button class="folder" data-target="folder-agenda"><div class="folder-emoji">📅</div><div class="folder-name">Agenda y reuniones</div><div class="folder-count">3 guías</div></button>
       <button class="folder" data-target="folder-mensajes"><div class="folder-emoji">✉️</div><div class="folder-name">Mensajes y correos</div><div class="folder-count">2 guías</div></button>
@@ -631,6 +631,7 @@
   <div id="folder-colegio" class="panel">
     <button class="back-btn" data-back="view-home">← Todas las carpetas</button>
       <div class="guide-list-item" data-target="guide-cartulina"><span class="name">Entender un comunicado del colegio en 1 minuto</span><span class="arrow">›</span></div>
+      <div class="guide-list-item" data-target="guide-estudiar"><span class="name">Estudiar para una prueba en 1 minuto</span><span class="arrow">›</span></div>
   </div>
 
   <div id="folder-cuentas" class="panel">
@@ -717,6 +718,51 @@
         <div class="callout">🛒 <b>¿Hay que comprar materiales?</b> "¿Dónde los venden cerca de mí y cuánto cuestan?"</div>
         <div class="callout">☀️ <b>¿Hay actividad al aire libre o deporte?</b> "¿Cómo va a estar el clima ese día?"</div>
         <div class="callout">⏰ <b>¿No quieres olvidarlo?</b> "Avísame un día antes"</div>
+      </div>
+      <p style="font-size:13px;color:var(--ink-soft);margin:12px 0 0;">Es la misma conversación de siempre — solo le sigues preguntando lo que necesites.</p>
+    </div>
+  </div>
+
+  <div id="guide-estudiar" class="panel">
+
+    <button class="back-btn" data-back="folder-colegio">← Colegio y niños</button>
+    <h2 class="guide-title">Estudiar para una prueba en 1 minuto</h2>
+    <p class="guide-sub">Sirve para: pruebas, exámenes, o cualquier materia que tengas que estudiar y no sabes por dónde empezar.</p>
+
+    <div class="block">
+      <div class="halftone-corner"></div>
+      <p class="block-label">Los 3 pasos (siempre los mismos)</p>
+      <ol class="steps">
+        <li><div><b>Abre el chat de tu IA.</b> El mismo que ya tengas abierto.</div></li>
+        <li><div><b>Mándale la foto</b> del temario, de la materia o de tu cuaderno.</div></li>
+        <li><div><b>Háblale normal.</b> Dile "explícame esto que no entendí" y listo.</div></li>
+      </ol>
+    </div>
+
+    <div class="block">
+      <div class="halftone-corner"></div>
+      <p class="block-label">Así se ve la conversación</p>
+      <div class="bubble-row">
+        <div class="bubble me"><span class="bubble-label">Tú</span>[le mandas la foto del temario]</div>
+        <div class="bubble me"><span class="bubble-label">Tú</span>"Explícame esto que no entendí en clases"</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>Te lo explico simple: [te lo explica con tus palabras]. <b>¿Quieres que te haga preguntas para practicar?</b></div>
+        <div class="bubble me"><span class="bubble-label">Tú</span>"Sí, hazme 5 preguntas"</div>
+        <div class="bubble ia"><span class="bubble-label">IA</span>Pregunta 1: ... Cuando termines, te digo cuáles fallaste y te las explico de nuevo.</div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:2px;">
+      <b>Lo importante:</b> no necesitas saber de tecnología. Es como pedirle ayuda a un compañero que sabe más, pero que está contigo siempre y no se cansa de repetirte las cosas.
+    </div>
+
+    <div class="block" style="margin-top:16px;">
+      <div class="halftone-corner"></div>
+      <p class="block-label">También le puedes pedir</p>
+      <div class="bubble-row">
+        <div class="callout">📸 <b>¿Tienes un cuaderno lleno?</b> "Sácame una foto a mi cuaderno y dime si está bien lo que escribí"</div>
+        <div class="callout">🧠 <b>¿Quieres practicar?</b> "Hazme preguntas de la materia hasta que me las sepa todas"</div>
+        <div class="callout">⏰ <b>¿La prueba es el viernes?</b> "Hazme un plan de estudio para la prueba del viernes"</div>
+        <div class="callout">📖 <b>¿Tienes que leer un libro?</b> "Explícame este libro capítulo por capítulo"</div>
       </div>
       <p style="font-size:13px;color:var(--ink-soft);margin:12px 0 0;">Es la misma conversación de siempre — solo le sigues preguntando lo que necesites.</p>
     </div>
